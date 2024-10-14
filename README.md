@@ -1,1 +1,4 @@
-# sbt-devops
+sbt-devops homeworks
+
+-----
+Suvorov Alexey
