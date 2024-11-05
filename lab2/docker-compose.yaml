@@ -1,0 +1,32 @@
+services:
+  build:
+    hostname: build
+    image: maven:3.8.3-openjdk-17
+    entrypoint:
+      - mvn
+      - clean
+      - install
+    volumes:
+      - ./spring-boot:/app
+    working_dir: /app
+
+  deploy:
+    hostname: deploy
+    image: openjdk:8-jdk-alpine
+    restart: unless-stopped
+    volumes:
+      - ./build_artifact:/app
+
+  ansible:
+    hostname: ansible
+    build:
+      dockerfile: ./Dockerfile
+    depends_on:
+      - build
+      - deploy
+    volumes:
+      - type: bind
+        source: ./spring-boot/target/spring-boot-0.0.1-SNAPSHOT.jar
+        target: /app.jar
+      - ./build_artifact:/compiled
+      - ./ansible:/playbook_dir
