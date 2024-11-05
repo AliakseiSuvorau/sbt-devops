@@ -1,7 +1,5 @@
 FROM alpine:3.11
-RUN apk add --no-cache openssh-client ansible git sshpass docker-cli
+RUN apk add --no-cache openssh-client ansible git sshpass
 COPY ./ansible /ansible
 
-WORKDIR /ansible
-
-CMD ["ansible-playbook", "building_playbook.yaml", "deploy_playbook.yaml"]
+ENTRYPOINT ["ansible-playbook", "playbook_dir/playbook.yaml", "-i", "playbook_dir/inventory.yaml"]
