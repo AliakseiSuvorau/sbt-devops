@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:alpine3.17
+    container_name: test-postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - db-test
+
+  backend:
+    container_name: test-backend
+    build:
+      context: ./..
+      dockerfile: src/Dockerfile
+    depends_on:
+      - postgres
+    networks:
+      - db-test
+
+volumes:
+  postgres_data:
+
+networks:
+  db-test:
