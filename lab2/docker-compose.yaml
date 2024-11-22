@@ -12,10 +12,15 @@ services:
 
   deploy:
     hostname: deploy
-    image: openjdk:8-jdk-alpine
+    build:
+      dockerfile: ./Dockerfile.deploy
     restart: unless-stopped
     volumes:
       - ./build_artifact:/app
+    tty: true
+    command: sh
+    ports:
+      - 2222:22
 
   ansible:
     hostname: ansible
