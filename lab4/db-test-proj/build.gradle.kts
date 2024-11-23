@@ -6,6 +6,9 @@ plugins {
     kotlin("jvm") version "2.0.0"
     application
     id("org.flywaydb.flyway") version "9.16.3"
+    id("io.qameta.allure") version "2.12.0"
+    id("org.sonarqube") version "6.0.0.5145"
+    jacoco
 }
 
 application {
@@ -48,4 +51,33 @@ kotlin {
 flyway {
     baselineOnMigrate = true
     locations = arrayOf("classpath:db/migration")
+}
+
+allure {
+    report {
+        reportDir.set(project.reporting.baseDirectory.dir("build/allure-results"))
+    }
+}
+
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "project_key")
+        property("sonar.organization", "organization")
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.login", "sonar_token")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+    }
+}
+
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
 }
