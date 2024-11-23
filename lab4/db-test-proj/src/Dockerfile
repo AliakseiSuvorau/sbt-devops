@@ -6,4 +6,4 @@ WORKDIR /app/
 
 RUN gradle clean build
 
-ENTRYPOINT ["gradle", ":run"]
+ENTRYPOINT ["gradle", "test"]
