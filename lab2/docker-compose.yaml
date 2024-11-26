@@ -32,6 +32,6 @@ services:
     volumes:
       - type: bind
         source: ./spring-boot/target/spring-boot-0.0.1-SNAPSHOT.jar
-        target: /app.jar
+        target: /compiled/app.jar
       - ./build_artifact:/compiled
       - ./ansible:/playbook_dir

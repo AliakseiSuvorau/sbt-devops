@@ -1,11 +1,4 @@
 - hosts: all
   tasks:
-    - name: Copying JAR file
-      copy:
-        src: app.jar
-        dest: ./compiled
-      delegate_to: localhost
-
     - name: Run command in container
-      delegate_to: deploy
-      command: java -jar ./compiled/app.jar
+      shell: java -jar /compiled/app.jar

@@ -1,5 +1,8 @@
-FROM alpine:3.11
-RUN apk add --no-cache openssh-client ansible git sshpass
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y openssh-client ansible
+RUN apt update && apt install -y openjdk-17-jdk
+
 RUN mkdir -p /root/.ssh
 RUN echo "Host *" > /root/.ssh/config && echo " StrictHostKeyChecking no" >> /root/.ssh/config
 COPY ./ansible /ansible
