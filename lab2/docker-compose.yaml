@@ -1,0 +1,34 @@
+services:
+  build:
+    hostname: build
+    image: maven:3.8.3-openjdk-17
+    volumes:
+      - ./spring-boot:/app
+    working_dir: /app
+    tty: true
+    command: sh
+    depends_on:
+      - ansible
+
+  deploy:
+    hostname: deploy
+    build:
+      dockerfile: ./Dockerfile.deploy
+    restart: unless-stopped
+    volumes:
+      - ./build_artifact:/app
+    ports:
+      - 2222:22
+    depends_on:
+      - ansible
+
+  ansible:
+    hostname: ansible
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ./spring-boot/target/spring-boot-0.0.1-SNAPSHOT.jar
+        target: /compiled/app.jar
+      - ./build_artifact:/compiled
+      - ./ansible:/playbook_dir

@@ -1,0 +1,9 @@
+- hosts: build
+  tasks:
+    - name: Build project
+      shell: mvn clean install
+
+- hosts: deploy
+  tasks:
+    - name: Run command in container
+      shell: java -jar /compiled/app.jar
