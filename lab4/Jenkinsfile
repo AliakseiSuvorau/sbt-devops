@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven v3.9.9'
+    }
+
+    stages {
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv(installationName: 'sonar') {
+                    script {
+                        sh 'mvn -f lab4/project clean install sonar:sonar'
+                    }
+                }
+            }
+        }
+
+        stage('Build and Get Allure Reports') {
+            steps {
+                sh 'mvn -f lab4/project test'
+            }
+            post {
+                always {
+                    allure includeProperties:
+                     false,
+                     jdk: '',
+                     results: [[path: 'lab4/project/target/surefire-reports']]
+                }
+            }
+        }
+
+        stage('Build docker image') {
+            steps {
+                script {
+                    sh 'docker build -t my-app lab4/project'
+                }
+            }
+        }
+    }
+}
